@@ -156,12 +156,18 @@
       let secondDeduction = parseDeduction(secondInput, afterFirst) || 0;
       let finalAmount = afterFirst - secondDeduction;
 
+      // 折扣金額 (以負數顯示)
+      let discountAmount = finalAmount - amount; // 會是負數
+      // 折扣百分比 (剩餘金額 / 原始金額)
+      let discountPercent = (finalAmount / amount * 100).toFixed(2);
+      // 折扣顯示為「X折」
+      let discountFold = (finalAmount / amount * 10).toFixed(1);
+
       document.getElementById("result").style.display = "block";
       document.getElementById("result").innerHTML =
-        "<b>第一次扣除:</b> " + Math.round(firstDeduction) + "<br>" +
-        "<b>第一次扣除後剩餘:</b> " + Math.round(afterFirst) + "<br>" +
-        "<b>第二次扣除:</b> " + Math.round(secondDeduction) + "<br>" +
-        "<b>最後剩餘金額:</b> " + Math.round(finalAmount);
+        "<b>最後剩餘金額:</b> " + Math.round(finalAmount) + "<br>" +
+        "<b>折扣金額:</b> " + discountAmount + "<br>" +
+        "<b>折扣:</b> " + discountPercent + "% = " + discountFold + "折";
     }
 
     function resetForm() {
