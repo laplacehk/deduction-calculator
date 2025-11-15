@@ -21,6 +21,7 @@
       padding: 20px;
       margin-bottom: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 100%;
     }
     label {
       font-weight: bold;
@@ -28,21 +29,14 @@
       display: block;
     }
     input {
-      width: 100%;
+      width: 100%;              /* 讓輸入框自動填滿容器 */
+      max-width: 100%;          /* 限制最大寬度不超過螢幕 */
+      box-sizing: border-box;   /* 包含 padding 在寬度計算內 */
       padding: 12px;
       margin-top: 5px;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 16px;
-    }
-    /* 移除 number input 的上下箭頭 */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    input[type=number] {
-      -moz-appearance: textfield; /* Firefox */
     }
     button {
       width: 100%;
@@ -65,20 +59,21 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       font-size: 18px;
       line-height: 1.6;
+      word-wrap: break-word;    /* 防止文字超出邊界 */
     }
   </style>
 </head>
 <body>
-  <h2>扣除計算器</h2>
+  <h2>計算器</h2>
 
   <div class="card">
-    <label>原始金額：</label>
+    <label>金額：</label>
     <input type="number" id="amount" value="10000">
 
-    <label>第一次扣除 (可輸入 10% 或 500)：</label>
+    <label>第一次扣除：</label>
     <input type="text" id="firstDeduction" value="10%">
 
-    <label>第二次扣除 (可輸入 10% 或 500)：</label>
+    <label>第二次扣除：</label>
     <input type="text" id="secondDeduction" value="500">
 
     <button onclick="calculate()">計算</button>
