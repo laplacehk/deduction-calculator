@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>扣除計算器</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    /* 移除 number input 的上下箭頭 */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield; /* Firefox */
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .result-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h2>扣除計算器</h2>
+
+  <div class="card">
+    <label>原始金額：</label>
+    <input type="number" id="amount" value="10000">
+
+    <label>第一次扣除 (可輸入 10% 或 500)：</label>
+    <input type="text" id="firstDeduction" value="10%">
+
+    <label>第二次扣除 (可輸入 10% 或 500)：</label>
+    <input type="text" id="secondDeduction" value="500">
+
+    <button onclick="calculate()">計算</button>
+  </div>
+
+  <div id="result" class="result-card" style="display:none;"></div>
+
+  <script>
+    function parseDeduction(value, base) {
+      value = value.trim();
+      if (value.endsWith("%")) {
+        let percent = parseFloat(value.replace("%","")) / 100;
+        return base * percent;
+      } else {
+        return parseFloat(value);
+      }
+    }
+
+    function calculate() {
+      let amount = parseFloat(document.getElementById("amount").value);
+      let firstInput = document.getElementById("firstDeduction").value;
+      let secondInput = document.getElementById("secondDeduction").value;
+
+      let firstDeduction = parseDeduction(firstInput, amount);
+      let afterFirst = amount - firstDeduction;
+
+      let secondDeduction = parseDeduction(secondInput, afterFirst);
+      let finalAmount = afterFirst - secondDeduction;
+
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerHTML =
+        "第一次扣除: " + Math.round(firstDeduction) + "<br>" +
+        "第一次扣除後剩餘: " + Math.round(afterFirst) + "<br>" +
+        "第二次扣除: " + Math.round(secondDeduction) + "<br>" +
+        "最後剩餘金額: " + Math.round(finalAmount);
+    }
+  </script>
+</body>
+</html>
