@@ -21,7 +21,6 @@
       padding: 20px;
       margin-bottom: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      max-width: 100%;
     }
     label {
       font-weight: bold;
@@ -29,28 +28,56 @@
       display: block;
     }
     input {
-      width: 100%;              /* 讓輸入框自動填滿容器 */
-      max-width: 100%;          /* 限制最大寬度不超過螢幕 */
-      box-sizing: border-box;   /* 包含 padding 在寬度計算內 */
+      width: 100%;
+      box-sizing: border-box;
       padding: 12px;
       margin-top: 5px;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 16px;
     }
-    button {
+    .quick-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .quick-buttons button {
+      flex: 1;
+      min-width: 60px;
+      background: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .quick-buttons button:hover {
+      background: #1976D2;
+    }
+    .main-btn, .reset-btn {
       width: 100%;
       padding: 15px;
-      background: #4CAF50;
-      color: white;
       border: none;
       border-radius: 10px;
       font-size: 18px;
-      margin-top: 20px;
+      margin-top: 15px;
       cursor: pointer;
     }
-    button:hover {
+    .main-btn {
+      background: #4CAF50;
+      color: white;
+    }
+    .main-btn:hover {
       background: #45a049;
+    }
+    .reset-btn {
+      background: #f44336;
+      color: white;
+    }
+    .reset-btn:hover {
+      background: #d32f2f;
     }
     .result-card {
       background: #fff;
@@ -59,7 +86,7 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       font-size: 18px;
       line-height: 1.6;
-      word-wrap: break-word;    /* 防止文字超出邊界 */
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -68,20 +95,39 @@
 
   <div class="card">
     <label>金額：</label>
-    <input type="number" id="amount" value="10000">
+    <input type="text" id="amount" placeholder="請輸入金額" inputmode="numeric" pattern="[0-9]*">
 
     <label>第一次扣除：</label>
-    <input type="text" id="firstDeduction" value="10%">
+    <input type="text" id="firstDeduction" placeholder="例如 10% 或 500">
+    <div class="quick-buttons">
+      <button onclick="setDeduction('firstDeduction','10%')">10%</button>
+      <button onclick="setDeduction('firstDeduction','20%')">20%</button>
+      <button onclick="setDeduction('firstDeduction','30%')">30%</button>
+      <button onclick="setDeduction('firstDeduction','40%')">40%</button>
+      <button onclick="setDeduction('firstDeduction','50%')">50%</button>
+    </div>
 
     <label>第二次扣除：</label>
-    <input type="text" id="secondDeduction" value="500">
+    <input type="text" id="secondDeduction" placeholder="例如 10% 或 500">
+    <div class="quick-buttons">
+      <button onclick="setDeduction('secondDeduction','10%')">10%</button>
+      <button onclick="setDeduction('secondDeduction','20%')">20%</button>
+      <button onclick="setDeduction('secondDeduction','30%')">30%</button>
+      <button onclick="setDeduction('secondDeduction','40%')">40%</button>
+      <button onclick="setDeduction('secondDeduction','50%')">50%</button>
+    </div>
 
-    <button onclick="calculate()">計算</button>
+    <button class="main-btn" onclick="calculate()">計算</button>
+    <button class="reset-btn" onclick="resetForm()">重置</button>
   </div>
 
   <div id="result" class="result-card" style="display:none;"></div>
 
   <script>
+    function setDeduction(fieldId, value) {
+      document.getElementById(fieldId).value = value;
+    }
+
     function parseDeduction(value, base) {
       value = value.trim();
       if (value.endsWith("%")) {
@@ -97,20 +143,31 @@
       let firstInput = document.getElementById("firstDeduction").value;
       let secondInput = document.getElementById("secondDeduction").value;
 
-      let firstDeduction = parseDeduction(firstInput, amount);
+      if (isNaN(amount)) {
+        alert("請輸入金額！");
+        return;
+      }
+
+      let firstDeduction = parseDeduction(firstInput, amount) || 0;
       let afterFirst = amount - firstDeduction;
 
-      let secondDeduction = parseDeduction(secondInput, afterFirst);
+      let secondDeduction = parseDeduction(secondInput, afterFirst) || 0;
       let finalAmount = afterFirst - secondDeduction;
 
       document.getElementById("result").style.display = "block";
       document.getElementById("result").innerHTML =
-        "第一次扣除: " + Math.round(firstDeduction) + "<br>" +
-        "第一次扣除後剩餘: " + Math.round(afterFirst) + "<br>" +
-        "第二次扣除: " + Math.round(secondDeduction) + "<br>" +
-        "最後剩餘金額: " + Math.round(finalAmount);
+        "<b>第一次扣除:</b> " + Math.round(firstDeduction) + "<br>" +
+        "<b>第一次扣除後剩餘:</b> " + Math.round(afterFirst) + "<br>" +
+        "<b>第二次扣除:</b> " + Math.round(secondDeduction) + "<br>" +
+        "<b>最後剩餘金額:</b> " + Math.round(finalAmount);
+    }
+
+    function resetForm() {
+      document.getElementById("amount").value = "";
+      document.getElementById("firstDeduction").value = "";
+      document.getElementById("secondDeduction").value = "";
+      document.getElementById("result").style.display = "none";
     }
   </script>
 </body>
 </html>
-
